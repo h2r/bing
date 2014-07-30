@@ -1,0 +1,12 @@
+project(BING)
+cmake_minimum_required(VERSION 2.8)
+
+#find_package( OpenCV REQUIRED )
+
+#include_directories(${OpenCV_INCLUDE_DIR})
+#link_directories(${OpenCV_LIBS_DIR})
+#set(OpenCV_LIBS opencv_core opencv_highgui opencv_imgproc)
+
+
+add_subdirectory(LibLinear)
+add_subdirectory(Objectness)

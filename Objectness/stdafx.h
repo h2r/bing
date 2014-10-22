@@ -79,7 +79,9 @@ typedef int64_t INT64;
 typedef uint8_t byte;
 typedef bool BOOL;
 
-#define FALSE false;
+#ifndef FALSE
+  #define FALSE false;
+#endif
 #define __popcnt64 __builtin_popcountll
 #endif
 

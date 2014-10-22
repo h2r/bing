@@ -116,25 +116,34 @@ int Objectness::loadTrainedModel(string modelName) // Return -1, 0, or 1 if part
 
 void Objectness::predictBBoxSI(CMat &img3u, ValStructVec<float, Vec4i> &valBoxes, vecI &sz, int NUM_WIN_PSZ, bool fast)
 {
+//cout << "there 3.1" << endl;
 	const int numSz = _svmSzIdxs.size();
 	const int imgW = img3u.cols, imgH = img3u.rows;
 	valBoxes.reserve(10000);
 	sz.clear(); sz.reserve(10000);
+//cout << "there 3.2" << endl;
 	for (int ir = numSz - 1; ir >= 0; ir--){
+//cout << "there 3.3" << endl;
 		int r = _svmSzIdxs[ir]; 
 		int height = cvRound(pow(_base, r/_numT + _minT)), width = cvRound(pow(_base, r%_numT + _minT));
+//cout << "there 3.4" << endl;
 		if (height > imgH * _base || width > imgW * _base)
 			continue;
+//cout << "there 3.5" << endl;
 
 		height = min(height, imgH), width = min(width, imgW);
 		Mat im3u, matchCost1f, mag1u;
 		resize(img3u, im3u, Size(cvRound(_W*imgW*1.0/width), cvRound(_W*imgH*1.0/height)));
 		gradientMag(im3u, mag1u);
+//cout << "there 3.6" << mag1u  << im3u << mag1u.type() << " " << CV_8U << endl;
 		
 		matchCost1f = _tigF.matchTemplate(mag1u);
+//cout << "there 3.7" << endl; cout.flush();
 
 		ValStructVec<float, Point> matchCost;
+//cout << "there 3.8" << endl;  cout.flush(); 
 		nonMaxSup(matchCost1f, matchCost, _NSS, NUM_WIN_PSZ, fast);
+//cout << "there 3.9" << endl; cout.flush();
 
 		// Find true locations and match values
 		double ratioX = width/_W, ratioY = height/_W;
@@ -169,10 +178,15 @@ void Objectness::predictBBoxSII(ValStructVec<float, Vec4i> &valBoxes, const vecI
 // Use numDet to control the final number of proposed bounding boxes, and number of per size (scale and aspect ratio)
 void Objectness::getObjBndBoxes(CMat &img3u, ValStructVec<float, Vec4i> &valBoxes, int numDetPerSize)
 {
+//cout << "there 1" << endl;
 	CV_Assert_(filtersLoaded() , ("SVM filters should be initialized before getting object proposals\n"));
+//cout << "there 2" << endl;
 	vecI sz;
+//cout << "there 3" << endl;
 	predictBBoxSI(img3u, valBoxes, sz, numDetPerSize, false);
+//cout << "there 4" << endl;
 	predictBBoxSII(valBoxes, sz);
+//cout << "there 5" << endl;
 	return;
 }
 
